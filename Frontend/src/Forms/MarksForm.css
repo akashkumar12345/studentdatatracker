@@ -1,0 +1,132 @@
+/* Main Container */
+.marks-container {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Field Group */
+.field-group {
+  margin-bottom: 20px;
+}
+
+.field-label {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.select-box,
+.input-box {
+  width: 100%;
+  padding: 12px;
+  height: 48px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+.select-box:focus,
+.input-box:focus {
+  border-color: #007bff;
+}
+
+/* Row Grid - FIXED Alignment */
+.row-box {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 60px;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* Remove Button */
+.remove-btn {
+  padding: 0;
+  border: none;
+  background: #ececec;
+  color: #444;
+  font-size: 22px;
+  height: 48px;
+  width: 48px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.remove-btn:hover {
+  background: #d5d5d5;
+}
+
+/* Add Subject Button */
+.add-btn {
+  margin-top: 15px;
+  background: #0a8f46;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+  font-weight: 600;
+}
+
+.add-btn:hover {
+  background: #066f35;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  background: #0066ff;
+  color: white;
+  margin-top: 25px;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-btn:hover {
+  background: #0054d6;
+}
+
+.submit-btn:disabled {
+  background: #9bbcff;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE FIX */
+@media (max-width: 768px) {
+  .row-box {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .remove-btn {
+    width: 100%;
+  }
+}
+

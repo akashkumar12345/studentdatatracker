@@ -1,0 +1,122 @@
+/* BACKDROP */
+.tea-loader-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 28, 45, 0.15);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* MAIN CONTAINER */
+.tea-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* SMALL CUP */
+.cup {
+  position: relative;
+  width: 80px;      /* smaller cup */
+  height: 65px;     /* smaller height */
+  background: #ffffff;
+  border: 3px solid #d9d9d9;
+  border-radius: 0 0 35px 35px;
+  overflow: hidden;
+  margin-top: 35px; /* steam space */
+  z-index: 2;
+}
+
+/* TEA LIQUID (auto adjusts to cup) */
+.tea {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 55%;
+  background: #c57f28;
+  animation: teaWave 3s ease-in-out infinite;
+}
+
+/* SMALL HANDLE */
+.cup::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  top: 18px;
+  width: 32px;
+  height: 40px;
+  border: 5px solid #d9d9d9;
+  border-radius: 50%;
+}
+
+/* SMALL PLATE */
+.plate {
+  width: 130px;
+  height: 36px;
+  background: #ffffff;
+  border-radius: 50%;
+  border: 4px solid #d9d9d9;
+  margin-top: -10px;
+  z-index: 1;
+}
+
+/* STEAM (same, just adjusted height) */
+.steam {
+  position: absolute;
+  top: -45px;     /* closer to small cup */
+  left: 50%;
+  width: 6px;
+  height: 40px;
+  transform: translateX(-50%);
+  border-radius: 50px;
+  background: linear-gradient(
+    to top,
+    rgba(3, 3, 3, 0.45),
+    rgba(12, 12, 12, 0)
+  );
+  animation: steamAnim 2.5s ease-in-out infinite;
+  opacity: 0;
+}
+
+/* 3 Steam Trails */
+.steam1 { left: 47%; animation-delay: 0s; }
+.steam2 { left: 53%; animation-delay: .5s; }
+.steam3 { left: 50%; animation-delay: 1s; }
+
+/* TEXT */
+.loading-text {
+  font-size: 1rem;
+  margin-top: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Dots Animation */
+.dots::after {
+  content: "";
+  animation: dotsAnim 1.4s steps(4, end) infinite;
+}
+
+@keyframes dotsAnim {
+  0%   { content: ""; }
+  33%  { content: "."; }
+  66%  { content: ".."; }
+  100% { content: "..."; }
+}
+
+/* STEAM ANIMATION */
+@keyframes steamAnim {
+  0% { opacity: 0; transform: translate(-50%, 0); }
+  50% { opacity: 1; transform: translate(-50%, -30px); }
+  100% { opacity: 0; transform: translate(-50%, -50px); }
+}
+
+/* TEA WAVE */
+@keyframes teaWave {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
