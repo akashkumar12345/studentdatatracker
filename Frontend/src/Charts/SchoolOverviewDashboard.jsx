@@ -589,7 +589,7 @@ const DashboardContent = () => {
                           align="center"
                           sx={{ py: 4, color: "text.secondary" }}
                         >
-                          No students found for selected filters.
+                          No students found for selected class.
                         </TableCell>
                       </TableRow>
                     ) : (
