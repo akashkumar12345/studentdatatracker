@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -16,26 +16,49 @@ import SchoolIcon from "@mui/icons-material/School";
 const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
 
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
-  const navigate = useNavigate();
+
+  const handleHome = () => {
+    console.log("inside handleHome");
+    navigate("/");
+  };
 
   const handleSignup = () => {
     console.log("inside signup");
-    window.open("/signup", "_blank"); // ✅ Opens signup page in new tab
-    // navigate("signup")
-  }
+    // new tab:
+    window.open("/signup", "_blank");
+    // same tab:
+    // navigate("/signup");
+  };
+
   const handleLogin = () => {
-    console.log("inside the log in")
-    window.open("/signin","/_blank");
-  }
+    console.log("inside the login");
+    window.open("/signin", "_blank");
+    // or navigate("/signin");
+  };
 
-  const handleHome = () => {
-    console.log("insidr the handleHome")
-    navigate("/")
-  }
+  const handleAbout = () => {
+    // yahan /about route ya page scroll add kar sakte ho
+    navigate("/about");
+  };
 
+  const handleContact = () => {
+    // yahan /contact route ya page scroll add kar sakte ho
+    navigate("/contact");
+  };
+
+  const handleMobileClick = (item) => {
+    handleMenuClose();
+
+    if (item === "Home") handleHome();
+    if (item === "About") handleAbout();
+    if (item === "Contact") handleContact();
+    if (item === "Login") handleLogin();
+    if (item === "Sign Up") handleSignup();
+  };
 
   return (
     <AppBar
@@ -47,7 +70,7 @@ const Header = () => {
       }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        {/* ---------- Left: Logo ---------- */}
+        {/* Left: Logo */}
         <Box display="flex" alignItems="center" gap={1}>
           <SchoolIcon color="primary" fontSize="large" />
           <Typography
@@ -62,21 +85,25 @@ const Header = () => {
           </Typography>
         </Box>
 
-        {/* ---------- Center: Navigation Links (hidden on mobile) ---------- */}
+        {/* Center: Desktop nav */}
         <Box
           sx={{
             display: { xs: "none", md: "flex" },
             gap: 3,
           }}
         >
-          <Button color="inherit" onClick={handleHome}>Home</Button>
-          {/* <Button color="inherit">Upload</Button> */}
-          {/* <Button color="inherit">Preview</Button> */}
-          <Button color="inherit">About</Button>
-          <Button color="inherit">Contact</Button>
+          <Button color="inherit" onClick={handleHome}>
+            Home
+          </Button>
+          <Button color="inherit" onClick={handleAbout}>
+            About
+          </Button>
+          <Button color="inherit" onClick={handleContact}>
+            Contact
+          </Button>
         </Box>
 
-        {/* ---------- Right: Login + Sign Up Buttons ---------- */}
+        {/* Right: Desktop auth buttons */}
         <Box
           sx={{
             display: { xs: "none", md: "flex" },
@@ -112,7 +139,7 @@ const Header = () => {
           </Button>
         </Box>
 
-        {/* ---------- Mobile Menu Icon ---------- */}
+        {/* Mobile menu icon */}
         <IconButton
           color="inherit"
           sx={{ display: { xs: "flex", md: "none" } }}
@@ -121,7 +148,7 @@ const Header = () => {
           <MenuIcon />
         </IconButton>
 
-        {/* ---------- Mobile Menu Dropdown ---------- */}
+        {/* Mobile dropdown menu */}
         <Menu
           anchorEl={anchorEl}
           open={open}
@@ -134,16 +161,8 @@ const Header = () => {
             },
           }}
         >
-          {[
-            "Home",
-            // "Upload",
-            // "Preview",
-            "About",
-            "Contact",
-            "Login",
-            "Sign Up",
-          ].map((item) => (
-            <MenuItem key={item} onClick={handleMenuClose}>
+          {["Home", "About", "Contact", "Login", "Sign Up"].map((item) => (
+            <MenuItem key={item} onClick={() => handleMobileClick(item)}>
               {item}
             </MenuItem>
           ))}
