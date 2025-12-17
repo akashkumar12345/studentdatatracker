@@ -26,8 +26,7 @@ const Home = () => {
                 </Typography>
 
                 <Typography variant="h6" sx={{ maxWidth: 600, mb: 4 }}>
-                    Create professional PowerPoint presentations instantly using AI.
-                    Just upload your data or enter a topic — and get beautiful slides in seconds!
+                    Streamline student management with comprehensive tracking, performance analytics, and intelligent insights. Add students, monitor progress, and identify improvement opportunities—all in one unified platform.
                 </Typography>
 
                 <Button

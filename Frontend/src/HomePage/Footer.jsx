@@ -27,8 +27,7 @@ const Footer = () => {
             </Typography>
           </Box>
           <Typography variant="body2" sx={{ mt: 1.5, opacity: 0.8 }}>
-            Create beautiful presentations instantly using the power of AI.
-            Upload, generate, and preview — all in one place.
+            Track student performance, identify improvement areas, and make informed decisions—all in one intelligent platform.
           </Typography>
         </Grid>
 

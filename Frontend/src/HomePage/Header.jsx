@@ -70,8 +70,8 @@ const Header = () => {
           }}
         >
           <Button color="inherit" onClick={handleHome}>Home</Button>
-          <Button color="inherit">Upload</Button>
-          <Button color="inherit">Preview</Button>
+          {/* <Button color="inherit">Upload</Button> */}
+          {/* <Button color="inherit">Preview</Button> */}
           <Button color="inherit">About</Button>
           <Button color="inherit">Contact</Button>
         </Box>
@@ -136,8 +136,8 @@ const Header = () => {
         >
           {[
             "Home",
-            "Upload",
-            "Preview",
+            // "Upload",
+            // "Preview",
             "About",
             "Contact",
             "Login",
