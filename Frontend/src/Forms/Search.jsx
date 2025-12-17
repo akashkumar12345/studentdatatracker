@@ -38,7 +38,7 @@ export default function Search() {
       };
 
       const res = await axios.post(
-        "http://localhost:5000/api/searchstud",
+        `${process.env.REACT_APP_SERVER_URL}/searchstud`,
         formData,
         config
       );

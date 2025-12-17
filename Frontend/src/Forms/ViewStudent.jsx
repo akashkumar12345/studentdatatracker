@@ -28,7 +28,7 @@ export default function ViewStudent() {
         const fromData = new FormData();
         fromData.append("email", jwtDecode(token).email);
         const res = await axios.post(
-          "http://localhost:5000/api/viewStudent",
+          `${process.env.REACT_APP_SERVER_URL}/viewStudent`,
           fromData
         );
         if (res.status === 200 && res.data.students) {

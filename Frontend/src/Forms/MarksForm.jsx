@@ -43,7 +43,7 @@ const MarksForm = (props) => {
       };
 
       const res = await axios.post(
-        "http://localhost:5000/api/getClass",
+        `${process.env.REACT_APP_SERVER_URL}/getClass`,
         {},
         config
       );
@@ -65,7 +65,7 @@ const MarksForm = (props) => {
       formData.append("class_id", class_id);
 
       const res = await axios.post(
-        "http://localhost:5000/api/getsubject",
+        `${process.env.REACT_APP_SERVER_URL}/getsubject`,
         formData,
         config
       );
@@ -126,7 +126,7 @@ const MarksForm = (props) => {
         headers: { Authorization: `Bearer ${token}` },
       };
       const res = await axios.post(
-        "http://localhost:5000/api/markssubmit",
+        `${process.env.REACT_APP_SERVER_URL}/markssubmit`,
         objecttobeSend,
         config
       );

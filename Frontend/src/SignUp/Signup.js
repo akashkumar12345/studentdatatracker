@@ -53,7 +53,7 @@ export default function Signup() {
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/signup`, {
         email,
         password,
       });

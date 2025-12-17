@@ -11,9 +11,10 @@ import { styled } from "@mui/material/styles";
 
 // Responsive Border Frame
 const BorderFrame = styled("div")(({ theme }) => ({
-  width: "100%",
-  padding: "40px",
+  width: "91.2%",
+  padding: "50px",
   backgroundImage: "url('/tableborder3.png')",
+  // backgroundColor: "GrayText",
   backgroundSize: "100% 100%",
   backgroundRepeat: "no-repeat",
   display: "flex",

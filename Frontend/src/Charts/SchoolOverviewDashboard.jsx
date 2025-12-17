@@ -65,7 +65,7 @@ const DashboardContent = () => {
       const formData = new FormData();
       formData.append("email", jwtDecode(token).email);
 
-      const url = "http://localhost:5000/api/failedStudentData";
+      const url = `${process.env.REACT_APP_SERVER_URL}/failedStudentData`;
       const res = await axios.post(url, formData, { headers });
 
       const data = res.data.data;

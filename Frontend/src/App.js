@@ -20,6 +20,8 @@ import Dashboard2 from './Charts/Demo2';
 // import FancyAlert from './FormComponent/FancyAlert';
 import SomeComponent from './Forms/SomeComponent';
 import HighestMarks from './Charts/HighestMarks';
+import AboutSection from './Forms/AboutSection';
+import ContactSection from './Forms/ContactSection';
 
 function App() {
   // const navigate = useNavigate();
@@ -78,6 +80,8 @@ function App() {
           <Route path="signup" element={<Signup />} />
           <Route path="signin" element={<Login />} />
           <Route path="logout" element={<LogoutPage />} />
+          <Route path='about' element={<AboutSection/>}/>
+          <Route path='contact' element = {<ContactSection/>}/>
         </Route>
 
         {/* protected route */}
@@ -89,8 +93,8 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="demo" element={<StudentLoader />} />
-        <Route path='demo3' element={<HighestMarks />} />
+        <Route path="demo" element={<ContactSection />} />
+        <Route path='demo3' element={<AboutSection />} />
       </Routes>
     </Router>
   );

@@ -66,7 +66,7 @@ const DashboardContent = () => {
       formData.append("email", jwtDecode(token).email);
 
       // ✅ Backend endpoint for toppers data (80%+)
-      const url = "http://localhost:5000/api/highestMark";
+      const url = `${process.env.REACT_APP_SERVER_URL}/highestMark`;
       const res = await axios.post(url, formData, { headers });
 
       const data = res.data.data;

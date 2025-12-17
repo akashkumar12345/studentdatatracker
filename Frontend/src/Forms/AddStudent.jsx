@@ -205,7 +205,7 @@ const AddStudent = () => {
       console.log("token is here", jwtDecode(token).email);
       console.log("formData", formData);
 
-      const url = "http://localhost:5000/api/auth/addStudent";
+      const url = `${process.env.REACT_APP_SERVER_URL}/auth/addStudent`;
       const res = await axios.post(url, formData);
 
       console.log("Response:", res.data);
@@ -300,7 +300,7 @@ const AddStudent = () => {
     try {
       const token = Cookies.get("token");
       const headers = { Authorization: `Bearer ${token}` };
-      const url = "http://localhost:5000/api/getGender";
+      const url = `${process.env.REACT_APP_SERVER_URL}/getGender`;
       const res = await axios.post(url, {}, { headers });
       setGenderOptions(res.data.gender || []);
     } catch (error) {
@@ -315,7 +315,7 @@ const AddStudent = () => {
     try {
       const token = Cookies.get("token");
       const headers = { Authorization: `Bearer ${token}` };
-      const url = "http://localhost:5000/api/getCaste";
+      const url = `${process.env.REACT_APP_SERVER_URL}/getCaste`;
       const res = await axios.post(url, {}, { headers });
       setCasteOptions(res.data.caste || []);
     } catch (error) {
@@ -330,7 +330,7 @@ const AddStudent = () => {
     try {
       const token = Cookies.get("token");
       const headers = { Authorization: `Bearer ${token}` };
-      const url = "http://localhost:5000/api/getState";
+      const url = `${process.env.REACT_APP_SERVER_URL}/getState`;
       const res = await axios.post(url, {}, { headers });
       setStateOptions(res.data.state || []);
     } catch (error) {
