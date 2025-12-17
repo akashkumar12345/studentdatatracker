@@ -588,7 +588,7 @@ const DashboardContent = () => {
                           align="center"
                           sx={{ py: 4, color: "text.secondary" }}
                         >
-                          No toppers found for selected filters.
+                          No toppers found for selected class.
                         </TableCell>
                       </TableRow>
                     ) : (
