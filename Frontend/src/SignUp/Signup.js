@@ -39,23 +39,28 @@ import {
   AppBar,
   Toolbar,
 } from "@mui/material";
-import Header from "../HomePage/Header";
 import Footer from "../HomePage/Footer";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // basic email pattern [web:114][web:126]
+const passwordRegex =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/; // strong pwd [web:115]
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(120); // 2 min
+  const [secondsLeft, setSecondsLeft] = useState(120);
+
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   // countdown jab loading true ho
   useEffect(() => {
     if (!loading) {
-      setSecondsLeft(120); // reset
+      setSecondsLeft(120);
       return;
     }
-
     if (secondsLeft === 0) return;
 
     const id = setTimeout(() => {
@@ -67,8 +72,30 @@ export default function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setMessage("");
+
+    // front-end validation
+    let hasError = false;
+
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address.");
+      hasError = true;
+    } else {
+      setEmailError("");
+    }
+
+    if (!passwordRegex.test(password)) {
+      setPasswordError(
+        "Password must be at least 8 characters, include upper & lower case letters, a number and a special character."
+      );
+      hasError = true;
+    } else {
+      setPasswordError("");
+    }
+
+    if (hasError) return;
+
+    setLoading(true);
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/auth/signup`,
@@ -142,7 +169,10 @@ export default function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               sx={{ mb: 2 }}
+              error={!!emailError}
+              helperText={emailError || "Enter a valid email, e.g. user@example.com"}
             />
+
             <TextField
               label="Password"
               type="password"
@@ -150,7 +180,12 @@ export default function Signup() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              sx={{ mb: 3 }}
+              sx={{ mb: 1 }}
+              error={!!passwordError}
+              helperText={
+                passwordError ||
+                "Min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character."
+              }
             />
 
             <Button
@@ -158,7 +193,7 @@ export default function Signup() {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ py: 1.2, fontWeight: "bold", borderRadius: 2 }}
+              sx={{ py: 1.2, fontWeight: "bold", borderRadius: 2, mt: 2 }}
               disabled={loading}
             >
               {loading ? (
@@ -186,4 +221,3 @@ export default function Signup() {
     </>
   );
 }
-
