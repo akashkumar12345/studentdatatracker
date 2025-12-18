@@ -9,38 +9,39 @@ const Home = () => {
       <Header />
 
       {/* Info marquee / banner */}
-      <Box
-        sx={{
-          width: "100%",
-          bgcolor: "#0d47a1",
-          color: "#fff",
-          py: 1,
-          px: 2,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: { xs: "0.8rem", md: "0.9rem" },
-          fontWeight: 500,
-          overflow: "hidden",
-        }}
-      >
-        <Typography
-          component="div"
-          sx={{
-            whiteSpace: "nowrap",
-            display: "inline-block",
-            animation: "scrollText 15s linear infinite",
-            "@keyframes scrollText": {
-              "0%": { transform: "translateX(100%)" },
-              "100%": { transform: "translateX(-100%)" },
-            },
-          }}
-        >
-          Moak is continuously evolving — new features and improvements are
-          being added daily. Stay connected for regular updates and
-          enhancements.
-        </Typography>
-      </Box>
+{/* Info marquee / banner */}
+<Box
+  sx={{
+    width: "100%",
+    bgcolor: "#0d47a1",
+    color: "#fff",
+    py: 0.5,
+    px: 0,
+    overflow: "hidden",          // container se bahar na dikhe
+    position: "relative",
+    whiteSpace: "nowrap",
+  }}
+>
+  <Box
+    component="div"
+    sx={{
+      display: "inline-block",
+      px: 2,
+      animation: "scrollText 18s linear infinite",
+      "@keyframes scrollText": {
+        "0%": { transform: "translateX(100%)" },
+        "100%": { transform: "translateX(-100%)" },
+      },
+      fontSize: { xs: "0.8rem", md: "0.9rem" },
+      fontWeight: 500,
+    }}
+  >
+    Moak is continuously evolving — new features and improvements are
+    being added daily. Stay connected for regular updates and
+    enhancements.
+  </Box>
+</Box>
+
 
       <Box
         sx={{
