@@ -50,7 +50,7 @@ const Home = () => {
             unified platform.
           </Typography>
 
-          <Button
+          {/* <Button
             variant="contained"
             sx={{
               backgroundColor: "#fff",
@@ -63,7 +63,7 @@ const Home = () => {
             }}
           >
             Get Started
-          </Button>
+          </Button> */}
         </Box>
 
         {/* Right: image */}

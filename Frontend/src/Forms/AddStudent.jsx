@@ -9,8 +9,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import Cookies from "js-cookie";
-import CustomTextField from "../FormComponent/CustomTextField";
 import { jwtDecode } from "jwt-decode";
+
+import CustomTextField from "../FormComponent/CustomTextField";
 import LabelText from "../FormComponent/LabelText";
 import Dropdown from "../FormComponent/DropDown";
 import ConfirmDialog from "../FormComponent/ConfirmDialog";
@@ -19,9 +20,12 @@ import StudentLoader from "../StudentLoader";
 
 const AddStudent = () => {
   const token = Cookies.get("token");
+  const decoded = token ? jwtDecode(token) : null;
+
   const [genderOptions, setGenderOptions] = useState([]);
   const [casteOptions, setCasteOptions] = useState([]);
   const [stateOptions, setStateOptions] = useState([]);
+
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     parentName: "",
@@ -30,7 +34,7 @@ const AddStudent = () => {
     middleName: "",
     lastName: "",
     address: "",
-    email: jwtDecode(token).email,
+    email: decoded?.email || "",
     gender: "",
     caste: "",
     state: "",
@@ -40,6 +44,7 @@ const AddStudent = () => {
     previous_school: "",
     distt: "",
   });
+
   const [loading, setLoading] = useState(false);
 
   // confirm dialog state
@@ -53,7 +58,10 @@ const AddStudent = () => {
     message: "",
   });
 
-  // Validation functions
+  // =========================
+  // Validation helpers
+  // =========================
+
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -73,98 +81,151 @@ const AddStudent = () => {
     if (!date) return false;
     const today = new Date();
     const birthDate = new Date(date);
-    const age = today.getFullYear() - birthDate.getFullYear();
+    let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
-    return age >= 5 && age <= 18; // Student age range
+    return age >= 5 && age <= 18;
   };
 
   const validateRequired = (value) => value.trim() !== "";
 
+  // Per-field validation (onChange ke time)
+  const validateField = (name, value) => {
+    switch (name) {
+      case "firstName":
+        if (!validateRequired(value)) return "First Name is required";
+        if (!validateName(value))
+          return "First name must be 2–50 letters (A–Z) only";
+        return "";
+
+      case "middleName":
+        if (value && !validateName(value))
+          return "Middle name must contain letters only";
+        return "";
+
+      case "lastName":
+        if (!validateRequired(value)) return "Last Name is required";
+        if (!validateName(value))
+          return "Last name must be 2–50 letters (A–Z) only";
+        return "";
+
+      case "nationality":
+        if (!validateRequired(value)) return "Nationality is required";
+        return "";
+
+      case "parentName":
+        if (!validateRequired(value)) return "Parent Name is required";
+        if (!validateName(value))
+          return "Parent name must contain letters only";
+        return "";
+
+      case "address":
+        if (!validateRequired(value)) return "Address is required";
+        return "";
+
+      case "date_of_birth":
+        if (!validateRequired(value)) return "Date of Birth is required";
+        if (!validateDate(value))
+          return "Student must be between 5–18 years old";
+        return "";
+
+      case "parent_mobile_number":
+        if (!validateRequired(value))
+          return "Parent Mobile Number is required";
+        if (!validatePhone(value))
+          return "Parent mobile must be 10 digits starting with 6–9";
+        return "";
+
+      case "emergency_number":
+        if (!validateRequired(value)) return "Emergency Number is required";
+        if (!validatePhone(value))
+          return "Emergency number must be 10 digits starting with 6–9";
+        return "";
+
+      case "previous_school":
+        if (!validateRequired(value)) return "Previous School is required";
+        return "";
+
+      case "distt":
+        if (!validateRequired(value)) return "District is required";
+        return "";
+
+      case "gender":
+        if (!value) return "Please select gender";
+        return "";
+
+      case "caste":
+        if (!value) return "Please select caste";
+        return "";
+
+      case "state":
+        if (!value) return "Please select state";
+        return "";
+
+      case "email":
+        if (!validateRequired(value)) return "Email is required";
+        if (!validateEmail(value)) return "Invalid email format";
+        return "";
+
+      default:
+        return "";
+    }
+  };
+
+  // onchange handler (live validation)
   const onChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
 
-    // Clear error on change
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    const message = validateField(name, value);
+    setErrors((prev) => ({
+      ...prev,
+      [name]: message,
+    }));
   };
 
+  // Full-form validation (submit se pehle)
   const validateForm = () => {
     const newErrors = {};
 
-    // Required fields validation (Middle Name REMOVED)
-    const requiredFields = [
-      { name: "firstName", label: "First Name" },
-      { name: "lastName", label: "Last Name" },
-      { name: "nationality", label: "Nationality" },
-      { name: "parentName", label: "Parent Name" },
-      { name: "address", label: "Address" },
-      { name: "date_of_birth", label: "Date of Birth" },
-      { name: "parent_mobile_number", label: "Parent Mobile Number" },
-      { name: "emergency_number", label: "Emergency Number" },
-      { name: "previous_school", label: "Previous School" },
-      { name: "distt", label: "District" },
-      { name: "gender", label: "Gender" },
-      { name: "caste", label: "Caste" },
-      { name: "state", label: "State" },
+    const fieldNames = [
+      "firstName",
+      "middleName",
+      "lastName",
+      "nationality",
+      "parentName",
+      "address",
+      "date_of_birth",
+      "parent_mobile_number",
+      "emergency_number",
+      "previous_school",
+      "distt",
+      "gender",
+      "caste",
+      "state",
+      "email",
     ];
 
-    requiredFields.forEach(({ name, label }) => {
-      if (!validateRequired(formData[name])) {
-        newErrors[name] = `${label} is required`;
-      }
+    fieldNames.forEach((field) => {
+      const msg = validateField(field, formData[field] || "");
+      if (msg) newErrors[field] = msg;
     });
-
-    // Name validations (Middle name only validates format, not required)
-    if (formData.firstName && !validateName(formData.firstName)) {
-      newErrors.firstName = "First name must be 2-50 letters only";
-    }
-    if (formData.middleName && !validateName(formData.middleName)) {
-      newErrors.middleName = "Middle name must be letters only";
-    }
-    if (formData.lastName && !validateName(formData.lastName)) {
-      newErrors.lastName = "Last name must be 2-50 letters only";
-    }
-    if (formData.parentName && !validateName(formData.parentName)) {
-      newErrors.parentName = "Parent name must be letters only";
-    }
-
-    // Phone validations
-    if (formData.parent_mobile_number && !validatePhone(formData.parent_mobile_number)) {
-      newErrors.parent_mobile_number = "Parent mobile must be 10 digits starting with 6-9";
-    }
-    if (formData.emergency_number && !validatePhone(formData.emergency_number)) {
-      newErrors.emergency_number = "Emergency number must be 10 digits starting with 6-9";
-    }
-
-    // Email validation
-    if (formData.email && !validateEmail(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-
-    // Date validation
-    if (formData.date_of_birth && !validateDate(formData.date_of_birth)) {
-      newErrors.date_of_birth = "Student must be between 5-18 years old";
-    }
-
-    // Dropdown validations
-    if (!formData.gender) newErrors.gender = "Please select gender";
-    if (!formData.caste) newErrors.caste = "Please select caste";
-    if (!formData.state) newErrors.state = "Please select state";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Field configs with helperText for errors
-  const getFieldConfig = (name, type, placeholder, label, required = true) => ({
+  // Field configs
+  const getFieldConfig = (name, type, placeholder, label) => ({
     name,
     type,
     placeholder,
@@ -174,25 +235,79 @@ const AddStudent = () => {
     defaultValue: formData[name],
   });
 
-  const firstName = getFieldConfig("firstName", "text", "Enter First Name", "First Name", true);
-  const middleName = getFieldConfig("middleName", "text", "Enter Middle Name (Optional)", "Middle Name", false); // ❌ Non-mandatory
-  const lastName = getFieldConfig("lastName", "text", "Enter Last Name", "Last Name", true);
-  const nationality = getFieldConfig("nationality", "text", "Enter Nationality", "Nationality", true);
-  const parentName = getFieldConfig("parentName", "text", "Enter Parent Name", "Parent Name", true);
-  const address = getFieldConfig("address", "text", "Enter Address", "Address", true);
-  const date_of_birth = getFieldConfig("date_of_birth", "date", "", true);
-  const parent_mobile_number = getFieldConfig("parent_mobile_number", "number", "Enter Parent Mobile Number", "Parent mobile number", true);
-  const previous_school = getFieldConfig("previous_school", "text", "Enter Previous School", "Previous School", true);
-  const distt = getFieldConfig("distt", "text", "Enter District", "District", true);
-  const emergency_number = getFieldConfig("emergency_number", "number", "Enter emergency number", "Emergency Number", true);
+  const firstName = getFieldConfig(
+    "firstName",
+    "text",
+    "Enter First Name",
+    "First Name"
+  );
+  const middleName = getFieldConfig(
+    "middleName",
+    "text",
+    "Enter Middle Name (Optional)",
+    "Middle Name"
+  );
+  const lastName = getFieldConfig(
+    "lastName",
+    "text",
+    "Enter Last Name",
+    "Last Name"
+  );
+  const nationality = getFieldConfig(
+    "nationality",
+    "text",
+    "Enter Nationality",
+    "Nationality"
+  );
+  const parentName = getFieldConfig(
+    "parentName",
+    "text",
+    "Enter Parent Name",
+    "Parent Name"
+  );
+  const address = getFieldConfig(
+    "address",
+    "text",
+    "Enter Address",
+    "Address"
+  );
+  const date_of_birth = getFieldConfig("date_of_birth", "date", "", "Date of Birth");
+  const parent_mobile_number = getFieldConfig(
+    "parent_mobile_number",
+    "number",
+    "Enter Parent Mobile Number",
+    "Parent mobile number"
+  );
+  const previous_school = getFieldConfig(
+    "previous_school",
+    "text",
+    "Enter Previous School",
+    "Previous School"
+  );
+  const distt = getFieldConfig(
+    "distt",
+    "text",
+    "Enter District",
+    "District"
+  );
+  const emergency_number = getFieldConfig(
+    "emergency_number",
+    "number",
+    "Enter emergency number",
+    "Emergency Number"
+  );
 
-  // actual submit (Yes pe chalega)
+  // =========================
+  // Submit handlers
+  // =========================
+
   const handleConfirmSubmit = async () => {
     if (!validateForm()) {
       setAlertConfig({
         severity: "error",
         title: "Validation Error",
-        message: "Please fix the errors in red fields before submitting.",
+        message:
+          "Please fix the errors in red fields before submitting.",
       });
       setAlertOpen(true);
       return;
@@ -202,15 +317,11 @@ const AddStudent = () => {
     try {
       setLoading(true);
       const token = Cookies.get("token");
-      console.log("token is here", jwtDecode(token).email);
-      console.log("formData", formData);
-
       const url = `${process.env.REACT_APP_SERVER_URL}/auth/addStudent`;
       const res = await axios.post(url, formData);
 
       console.log("Response:", res.data);
 
-      // Reset form on success
       setFormData({
         parentName: "",
         nationality: "",
@@ -230,7 +341,6 @@ const AddStudent = () => {
       });
       setErrors({});
 
-      // success alert
       setAlertConfig({
         severity: "success",
         title: "Student added",
@@ -243,9 +353,9 @@ const AddStudent = () => {
         error.response?.data || error.message
       );
 
-      // error alert
       const apiMsg =
-        error.response?.data?.message || "Something went wrong while saving.";
+        error.response?.data?.message ||
+        "Something went wrong while saving.";
       setAlertConfig({
         severity: "error",
         title: "Submit failed",
@@ -257,7 +367,6 @@ const AddStudent = () => {
     }
   };
 
-  // sirf dialog open - validate before opening
   const handleOpenConfirm = () => {
     if (validateForm()) {
       setOpenConfirm(true);
@@ -265,7 +374,8 @@ const AddStudent = () => {
       setAlertConfig({
         severity: "warning",
         title: "Incomplete Form",
-        message: "Please fill all required fields correctly before submitting.",
+        message:
+          "Please fill all required fields correctly before submitting.",
       });
       setAlertOpen(true);
     }
@@ -283,7 +393,7 @@ const AddStudent = () => {
       middleName: "",
       lastName: "",
       address: "",
-      email: jwtDecode(token).email,
+      email: decoded?.email || "",
       gender: "",
       caste: "",
       state: "",
@@ -295,6 +405,10 @@ const AddStudent = () => {
     });
     setErrors({});
   };
+
+  // =========================
+  // Fetch dropdown options
+  // =========================
 
   const fetchingGender = async () => {
     try {
@@ -345,11 +459,15 @@ const AddStudent = () => {
     fetchingGender();
     fetchingCaste();
     fetchingState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // =========================
+  // JSX
+  // =========================
 
   return (
     <div style={{ position: "relative" }}>
-      {/* ✅ tea loader overlay */}
       {loading && <StudentLoader />}
 
       <Box
@@ -366,40 +484,35 @@ const AddStudent = () => {
             <Grid item xs={12} md={10} lg={8}>
               {Object.keys(errors).length > 0 && (
                 <Alert severity="error" sx={{ mb: 2 }}>
-                  Please fix {Object.keys(errors).length} error(s) before submitting.
+                  Please fix {Object.keys(errors).length} error(s):{" "}
+                  {Object.keys(errors).join(", ")}.
                 </Alert>
               )}
-              
+
               <Grid container spacing={3}>
                 {/* Column 1 */}
                 <Grid item xs={12} md={6}>
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                      <LabelText title="First Name" required={true} />
+                      <LabelText title="First Name" required />
                     </Grid>
                     <Grid item xs={12} sm={8}>
-                      <CustomTextField
-                        {...firstName}
-                        onchange={onChange}
-                      />
+                      <CustomTextField {...firstName} onchange={onChange} />
                     </Grid>
                   </Grid>
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                      <LabelText title="Last Name" required={true} />
+                      <LabelText title="Last Name" required />
                     </Grid>
                     <Grid item xs={12} sm={8}>
-                      <CustomTextField
-                        {...lastName}
-                        onchange={onChange}
-                      />
+                      <CustomTextField {...lastName} onchange={onChange} />
                     </Grid>
                   </Grid>
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                      <LabelText title="Nationality" required={true} />
+                      <LabelText title="Nationality" required />
                     </Grid>
                     <Grid item xs={12} sm={8}>
                       <CustomTextField
@@ -411,7 +524,7 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                      <LabelText title="StuGender" required={true} />
+                      <LabelText title="StuGender" required />
                     </Grid>
                     <Grid item xs={12} sm={8}>
                       <Dropdown
@@ -431,7 +544,7 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                      <LabelText title="P.Mob. No." required={true} />
+                      <LabelText title="P.Mob. No." required />
                     </Grid>
                     <Grid item xs={12} sm={8}>
                       <CustomTextField
@@ -443,7 +556,7 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                      <LabelText title="Emerg. No" required={true} />
+                      <LabelText title="Emerg. No" required />
                     </Grid>
                     <Grid item xs={12} sm={8}>
                       <CustomTextField
@@ -455,13 +568,10 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                      <LabelText title="District/Di." required={true} />
+                      <LabelText title="District/Di." required />
                     </Grid>
                     <Grid item xs={12} sm={8}>
-                      <CustomTextField
-                        {...distt}
-                        onchange={onChange}
-                      />
+                      <CustomTextField {...distt} onchange={onChange} />
                     </Grid>
                   </Grid>
                 </Grid>
@@ -470,7 +580,6 @@ const AddStudent = () => {
                 <Grid item xs={12} md={6}>
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={5}>
-                      {/* ❌ Middle Name - NO required={true} */}
                       <LabelText title="Middle Name" required={false} />
                     </Grid>
                     <Grid item xs={12} sm={7}>
@@ -483,7 +592,7 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={5}>
-                      <LabelText title="Parent Name" required={true} />
+                      <LabelText title="Parent Name" required />
                     </Grid>
                     <Grid item xs={12} sm={7}>
                       <CustomTextField
@@ -495,19 +604,16 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={5}>
-                      <LabelText title="Address Line" required={true} />
+                      <LabelText title="Address Line" required />
                     </Grid>
                     <Grid item xs={12} sm={7}>
-                      <CustomTextField
-                        {...address}
-                        onchange={onChange}
-                      />
+                      <CustomTextField {...address} onchange={onChange} />
                     </Grid>
                   </Grid>
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={5}>
-                      <LabelText title="Date of Birth" required={true} />
+                      <LabelText title="Date of Birth" required />
                     </Grid>
                     <Grid item xs={12} sm={7}>
                       <CustomTextField
@@ -519,7 +625,7 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={5}>
-                      <LabelText title="Caste/Categ." required={true} />
+                      <LabelText title="Caste/Categ." required />
                     </Grid>
                     <Grid item xs={12} sm={7}>
                       <Dropdown
@@ -539,7 +645,7 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={5}>
-                      <LabelText title="Prev. School" required={true} />
+                      <LabelText title="Prev. School" required />
                     </Grid>
                     <Grid item xs={12} sm={7}>
                       <CustomTextField
@@ -551,7 +657,7 @@ const AddStudent = () => {
 
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12} sm={5}>
-                      <LabelText title="State" required={true} />
+                      <LabelText title="State" required />
                     </Grid>
                     <Grid item xs={12} sm={7}>
                       <Dropdown
@@ -619,7 +725,7 @@ const AddStudent = () => {
         onCancel={handleCancelConfirm}
       />
 
-      {/* FancyAlert - success / error */}
+      {/* FancyAlert */}
       {alertOpen && (
         <FancyAlert
           severity={alertConfig.severity}
