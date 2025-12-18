@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -12,31 +12,47 @@ import {
 } from "@mui/material";
 
 export default function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(60);
+
+  // countdown jab loading true ho
+  useEffect(() => {
+    if (!loading) {
+      setSecondsLeft(60);
+      return;
+    }
+
+    if (secondsLeft === 0) return;
+
+    const id = setTimeout(() => {
+      setSecondsLeft((s) => s - 1);
+    }, 1000);
+
+    return () => clearTimeout(id);
+  }, [loading, secondsLeft]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/login`, {
-        email,
-        password,
-      });
-      // Cookies.set("token", res.data.token, { expires: 1, sameSite: "Strict" });
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/auth/login`,
+        { email, password }
+      );
+
       Cookies.set("token", res.data.token);
-      // sessionStorage.setItem("isLoggedIn", "true");
       setMessage("✅ Login successful!");
       setEmail("");
       setPassword("");
       navigate("/dash");
     } catch (err) {
       setMessage(err.response?.data?.error || "❌ Login failed");
-      alert("invalid credentials")
+      alert("invalid credentials");
     } finally {
       setLoading(false);
     }
@@ -65,11 +81,7 @@ export default function Login() {
       >
         <Typography
           variant="h4"
-          sx={{
-            fontWeight: "bold",
-            mb: 2,
-            color: "primary.main",
-          }}
+          sx={{ fontWeight: "bold", mb: 2, color: "primary.main" }}
         >
           Welcome Back
         </Typography>
@@ -105,7 +117,14 @@ export default function Login() {
             sx={{ py: 1.2, fontWeight: "bold", borderRadius: 2 }}
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Log In"}
+            {loading ? (
+              <>
+                <CircularProgress size={20} color="inherit" sx={{ mr: 1 }} />
+                {secondsLeft}s
+              </>
+            ) : (
+              "Log In"
+            )}
           </Button>
         </form>
 
