@@ -71,7 +71,7 @@ const Home = () => {
               fontSize: { xs: "2rem", md: "3rem" },
             }}
           >
-            Welcome to Moak 🚀
+            Welcome to Moak 
           </Typography>
 
           <Typography
