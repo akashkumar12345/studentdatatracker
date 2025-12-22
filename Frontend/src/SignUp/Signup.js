@@ -108,7 +108,7 @@ export default function Signup() {
         }}
       >
         <Paper
-          elevation={8}
+          elevation={10}
           sx={{
             p: 4,
             width: "100%",
@@ -119,28 +119,34 @@ export default function Signup() {
             overflow: "visible",
           }}
         >
-          {/* Avatar same style as Login */}
+          {/* Premium Avatar */}
           <Avatar
             sx={{
-              width: 80,
-              height: 80,
-              bgcolor: "#1976d2",
+              width: 88,
+              height: 88,
+              background:
+                "radial-gradient(circle at 30% 20%, #64b5f6 0%, #1565c0 40%, #0d47a1 100%)",
               color: "#e3f2fd",
-              boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+              boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
               position: "absolute",
-              top: -40,
+              top: -44,
               left: "50%",
               transform: "translateX(-50%)",
-              border: "3px solid #fff",
+              border: "3px solid #ffffff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <PersonOutlineIcon sx={{ fontSize: 46 }} />
+            <PersonOutlineIcon
+              sx={{
+                fontSize: 48,
+                filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
+              }}
+            />
           </Avatar>
 
-          <Box sx={{ mt: 5 }}>
+          <Box sx={{ mt: 6 }}>
             <Typography
               variant="h4"
               sx={{
