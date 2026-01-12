@@ -35,28 +35,54 @@ export default function Login() {
     return () => clearTimeout(id);
   }, [loading, secondsLeft]);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/auth/login`,
-        { email, password }
-      );
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setMessage("");
 
-      Cookies.set("token", res.data.token);
-      setMessage("✅ Login successful!");
+  try {
+    // ✅ 1st API: Login (email/password verify)
+    const loginRes = await axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/auth/login`,
+      { email, password }
+    );
+
+    console.log("Login response:", loginRes.data);
+
+    // ✅ Store session cookies
+    // Cookies.set("pendingEmail", loginRes.data.email, { expires: 1 / 24 / 60 });
+    // Cookies.set("pendingUserId", loginRes.data.userId || loginRes.data.id, { expires: 1 / 24 / 60 });
+    // Cookies.set("otpSessionTime", Date.now().toString(), { expires: 1 / 24 / 60 });
+
+    // ✅ 2nd API: Send OTP (only if login successful)
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/auth/send-otp`,
+        { email: loginRes.data.email }
+      );
+      
+      setMessage("✅ OTP sent to your email! Redirecting...");
       setEmail("");
       setPassword("");
-      navigate("/dash");
-    } catch (err) {
-      setMessage(err.response?.data?.error || "❌ Login failed");
-      alert("invalid credentials");
-    } finally {
-      setLoading(false);
+
+      // Auto redirect to OTP
+      setTimeout(() => {
+        // navigate("/otp-verify");
+        navigate(`/otp-verify/${btoa(email)}`); // Base64 encode
+      }, 1500);
+
+    } catch (otpErr) {
+      console.error("OTP send error:", otpErr.response?.data);
+      setMessage("❌ Login successful but OTP send failed. Please try again.");
     }
-  };
+
+  } catch (loginErr) {
+    console.error("Login error:", loginErr.response?.data);
+    setMessage(loginErr.response?.data?.error || "❌ Invalid credentials");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <Box
@@ -81,7 +107,6 @@ export default function Login() {
           overflow: "visible",
         }}
       >
-        {/* Premium Avatar (same style as Signup) */}
         <Avatar
           sx={{
             width: 88,
@@ -116,7 +141,7 @@ export default function Login() {
             Welcome Back
           </Typography>
           <Typography variant="body2" sx={{ mb: 3, color: "text.secondary" }}>
-            Log in to continue using Moak
+            Enter credentials to receive OTP
           </Typography>
 
           <form onSubmit={handleLogin}>
@@ -162,7 +187,7 @@ export default function Login() {
                   {secondsLeft}s
                 </>
               ) : (
-                "Log In"
+                "Send OTP"
               )}
             </Button>
           </form>

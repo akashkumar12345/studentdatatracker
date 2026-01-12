@@ -22,10 +22,12 @@ import SomeComponent from './Forms/SomeComponent';
 import HighestMarks from './Charts/HighestMarks';
 import AboutSection from './Forms/AboutSection';
 import ContactSection from './Forms/ContactSection';
+import OtpVerify from './OTP/OtpVerify';
 
 function App() {
   // const navigate = useNavigate();
   const [showLogoutMsg, setShowLogoutMsg] = useState(false);
+  
   // Remove token and sessionStorage on page unload (refresh or close)
   useEffect(() => {
     const handleUnload = () => {
@@ -79,6 +81,8 @@ function App() {
           <Route index element={<Home />} />
           <Route path="signup" element={<Signup />} />
           <Route path="signin" element={<Login />} />
+          {/* <Route path="otp-verify" element={<OtpVerify />} /> */}
+          <Route path="otp-verify/:email" element={<OtpVerify />} />
           <Route path="logout" element={<LogoutPage />} />
           <Route path='about' element={<AboutSection/>}/>
           <Route path='contact' element = {<ContactSection/>}/>
@@ -94,7 +98,7 @@ function App() {
           }
         />
         <Route path="demo" element={<ContactSection />} />
-        <Route path='demo3' element={<AboutSection />} />
+        <Route path='demo3' element={<OtpVerify />} />
       </Routes>
     </Router>
   );
