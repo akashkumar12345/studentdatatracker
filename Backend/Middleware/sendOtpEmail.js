@@ -44,14 +44,51 @@ async function sendOtpEmail(to, otp) {
       to: [{ email: to }],
       subject: 'Your Moak verification code',
       htmlContent: `
-        <html>
-          <body>
-            <p>Hi,</p>
-            <p>Your <strong>Moak</strong> verification code is:</p>
-            <h1 style="font-size: 36px; color: #007bff; letter-spacing: 8px;">${otp}</h1>
-            <p>Valid for 5 minutes only</p>
-          </body>
-        </html>
+<html>
+  <body style="font-family: Arial, sans-serif; background-color: #f5f7fa; padding: 20px;">
+    <div style="max-width: 500px; margin: auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+
+      <p style="font-size: 16px; color: #333;">
+        Hi,
+      </p>
+
+      <p style="font-size: 16px; color: #333;">
+        Your <strong>Moak</strong> verification code is:
+      </p>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <span style="
+          display: inline-block;
+          font-size: 36px;
+          font-weight: bold;
+          color: #007bff;
+          letter-spacing: 6px;
+          padding: 12px 24px;
+          border: 1px dashed #007bff;
+          border-radius: 6px;
+        ">
+          ${otp}
+        </span>
+      </div>
+
+      <p style="font-size: 14px; color: #555;">
+        This code is valid for <strong>5 minutes</strong>.  
+        Please do not share this code with anyone.
+      </p>
+
+      <p style="font-size: 14px; color: #777; margin-top: 30px;">
+        If you did not request this, please ignore this email.
+      </p>
+
+      <p style="font-size: 14px; color: #777;">
+        Regards,<br />
+        <strong>Moak Team</strong>
+      </p>
+
+    </div>
+  </body>
+</html>
+
       `,
     }, {
       headers: {
