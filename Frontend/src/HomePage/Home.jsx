@@ -9,38 +9,38 @@ const Home = () => {
       <Header />
 
       {/* Info marquee / banner */}
-{/* Info marquee / banner */}
-<Box
-  sx={{
-    width: "100%",
-    bgcolor: "#0d47a1",
-    color: "#fff",
-    py: 0.5,
-    px: 0,
-    overflow: "hidden",          // container se bahar na dikhe
-    position: "relative",
-    whiteSpace: "nowrap",
-  }}
->
-  <Box
-    component="div"
-    sx={{
-      display: "inline-block",
-      px: 2,
-      animation: "scrollText 18s linear infinite",
-      "@keyframes scrollText": {
-        "0%": { transform: "translateX(100%)" },
-        "100%": { transform: "translateX(-100%)" },
-      },
-      fontSize: { xs: "0.8rem", md: "0.9rem" },
-      fontWeight: 500,
-    }}
-  >
-    Moak is continuously evolving — new features and improvements are
-    being added daily. Stay connected for regular updates and
-    enhancements.
-  </Box>
-</Box>
+      {/* Info marquee / banner */}
+      <Box
+        sx={{
+          width: "100%",
+          bgcolor: "#0d47a1",
+          color: "#fff",
+          py: 0.5,
+          px: 0,
+          overflow: "hidden",          // container se bahar na dikhe
+          position: "relative",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <Box
+          component="div"
+          sx={{
+            display: "inline-block",
+            px: 2,
+            animation: "scrollText 18s linear infinite",
+            "@keyframes scrollText": {
+              "0%": { transform: "translateX(100%)" },
+              "100%": { transform: "translateX(-100%)" },
+            },
+            fontSize: { xs: "0.8rem", md: "0.9rem" },
+            fontWeight: 500,
+          }}
+        >
+          Moak is continuously evolving — new features and improvements are
+          being added daily. Stay connected for regular updates and
+          enhancements.
+        </Box>
+      </Box>
 
 
       <Box
@@ -71,9 +71,8 @@ const Home = () => {
               fontSize: { xs: "2rem", md: "3rem" },
             }}
           >
-            Welcome to Moak 
-          </Typography>
-
+            {/* Welcome to Moak */}
+            Maintenance in progress - normal service shortly          </Typography>
           <Typography
             variant="h6"
             sx={{
