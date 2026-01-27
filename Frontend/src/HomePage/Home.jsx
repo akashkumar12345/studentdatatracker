@@ -71,8 +71,9 @@ const Home = () => {
               fontSize: { xs: "2rem", md: "3rem" },
             }}
           >
-            {/* Welcome to Moak */}
-            Maintenance in progress - normal service shortly          </Typography>
+            Welcome to Moak
+            {/* Maintenance in progress - normal service shortly           */}
+            </Typography>
           <Typography
             variant="h6"
             sx={{
