@@ -23,11 +23,13 @@ import HighestMarks from './Charts/HighestMarks';
 import AboutSection from './Forms/AboutSection';
 import ContactSection from './Forms/ContactSection';
 import OtpVerify from './OTP/OtpVerify';
+import Messenger from './SignIn/Messenger';
+// import AnimatedTeaCup from './Animations/Anime1';
 
 function App() {
   // const navigate = useNavigate();
   const [showLogoutMsg, setShowLogoutMsg] = useState(false);
-  
+
   // Remove token and sessionStorage on page unload (refresh or close)
   useEffect(() => {
     const handleUnload = () => {
@@ -84,8 +86,10 @@ function App() {
           {/* <Route path="otp-verify" element={<OtpVerify />} /> */}
           <Route path="otp-verify/:email" element={<OtpVerify />} />
           <Route path="logout" element={<LogoutPage />} />
-          <Route path='about' element={<AboutSection/>}/>
-          <Route path='contact' element = {<ContactSection/>}/>
+          <Route path='about' element={<AboutSection />} />
+          <Route path='contact' element={<ContactSection />} />
+          <Route path='signin-messenger' element={<Messenger />} />
+
         </Route>
 
         {/* protected route */}
@@ -98,7 +102,7 @@ function App() {
           }
         />
         <Route path="demo" element={<ContactSection />} />
-        <Route path='demo3' element={<OtpVerify />} />
+        {/* <Route path='demo4' element = {<AnimatedTeaCup />}/> */}
       </Routes>
     </Router>
   );

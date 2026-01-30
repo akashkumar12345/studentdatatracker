@@ -13,12 +13,15 @@ import {
 } from "@mui/material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import Footer from "../HomePage/Footer";
+import { useNavigate } from "react-router-dom"; // ✅ ADD
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
 export default function Signup() {
+  const navigate = useNavigate(); // ✅ ADD
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -68,13 +71,20 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      const res = await axios.post(
+      await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/auth/signup`,
         { email, password }
       );
+
       setMessage("✅ Signup successful!");
       setEmail("");
       setPassword("");
+
+      // ✅ NAVIGATE TO SIGNIN (after short delay)
+      setTimeout(() => {
+        navigate("/signin");
+      }, 1500);
+
     } catch (err) {
       setMessage(err.response?.data?.error || "❌ Signup failed");
     } finally {
@@ -92,9 +102,7 @@ export default function Signup() {
           borderRadius: 0,
         }}
       >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          {/* header content */}
-        </Toolbar>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }} />
       </AppBar>
 
       <Box
@@ -119,7 +127,6 @@ export default function Signup() {
             overflow: "visible",
           }}
         >
-          {/* Premium Avatar */}
           <Avatar
             sx={{
               width: 88,
@@ -133,34 +140,17 @@ export default function Signup() {
               left: "50%",
               transform: "translateX(-50%)",
               border: "3px solid #ffffff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
             }}
           >
-            <PersonOutlineIcon
-              sx={{
-                fontSize: 48,
-                filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
-              }}
-            />
+            <PersonOutlineIcon sx={{ fontSize: 48 }} />
           </Avatar>
 
           <Box sx={{ mt: 6 }}>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                mb: 2,
-                color: "primary.main",
-              }}
-            >
+            <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
               Create an Account
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{ mb: 3, color: "text.secondary" }}
-            >
+
+            <Typography variant="body2" sx={{ mb: 3, color: "text.secondary" }}>
               Sign up to get started with Moak
             </Typography>
 
@@ -175,8 +165,7 @@ export default function Signup() {
                 sx={{ mb: 2 }}
                 error={!!emailError}
                 helperText={
-                  emailError ||
-                  "Enter a valid email, e.g. user@example.com"
+                  emailError || "Enter a valid email, e.g. user@example.com"
                 }
               />
 
@@ -198,18 +187,13 @@ export default function Signup() {
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
                 fullWidth
-                sx={{ py: 1.2, fontWeight: "bold", borderRadius: 2, mt: 2 }}
+                sx={{ py: 1.2, fontWeight: "bold", mt: 2 }}
                 disabled={loading}
               >
                 {loading ? (
                   <>
-                    <CircularProgress
-                      size={20}
-                      color="inherit"
-                      sx={{ mr: 1 }}
-                    />
+                    <CircularProgress size={20} sx={{ mr: 1 }} />
                     {secondsLeft}s
                   </>
                 ) : (
@@ -220,7 +204,6 @@ export default function Signup() {
 
             {message && (
               <Typography
-                variant="body1"
                 sx={{
                   mt: 2,
                   color: message.includes("✅") ? "green" : "red",
@@ -232,6 +215,7 @@ export default function Signup() {
           </Box>
         </Paper>
       </Box>
+
       <Footer />
     </>
   );
