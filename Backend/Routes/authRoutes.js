@@ -18,8 +18,8 @@ const {
   sendOtp,
   verifyOtp,
 } = require('../Controller/authController');
-// const { createStudent } = require('../Controller/studentController');
-// const { viewStudentforSearch } = require('../Controller/viewStudentController');
+const { createStudent } = require('../Controller/studentController');
+const { viewStudentforSearch } = require('../Controller/viewStudentController');
 
 const router = express.Router();
 
@@ -30,7 +30,7 @@ router.post('/login', login);
 router.post('/send-otp', sendOtp);
 router.post('/verify-otp', verifyOtp);
 
-// router.post('/addStudent', createStudent);
-// router.post('/viewStudent', viewStudentforSearch);
+router.post('/addStudent', createStudent);
+router.post('/viewStudent', viewStudentforSearch);
 
 module.exports = router;
